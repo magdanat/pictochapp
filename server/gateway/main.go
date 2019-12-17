@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -34,15 +35,27 @@ func main() {
 		DB: 0,
 	})
 
+	// create a database object, which manages a pool of
+	// network connections to the database server
 	db, err := sql.Open("mysql", dsn)
-	if err != {
-		fmt.Println("There was an error opening the database.")
-	} else {
-		fmt.Println("Database successfully opened!")
+	if err != nil {
+		fmt.Printf("error opening database: %v\n", err)
+		os.Exit(1)
 	}
 
+	if err := db.Ping(); err != nil {
+		fmt.Printf("Error pinging database: %v\n", err)
+	} else {
+		fmt.Printf("Successfully connected!\n")
+	}
+
+	context := &handlers.HandlerContext {
+
+	}
 
 	mux := http.NewServeMux()
+
+	// Handler functions...
 
 	fmt.Printf("listening on %s... \n", addr)
 	log.Fatal(http.ListenAndServeTLS(addr, tlsCertPath, tlsKeyPath, mux))
